@@ -1,0 +1,1 @@
+FlowJam = FlowJam or {}

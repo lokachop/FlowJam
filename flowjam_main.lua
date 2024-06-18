@@ -238,158 +238,20 @@ LKHooks.Add("Think", "UpdateScene", function(dt)
 	local cTime = LKHooks.CurTime()
 
 	FLK3D.PushUniverse(univ)
-		--FLK3D.SetObjectAng("loka1", Angle(cTime * 64, cTime * 32, 0))
-		--FLK3D.SetSunDir(FLK3D.GetCamDir())
-	FLK3D.PopUniverse()
-
-end)
-
-
-local shootFlag = false
-local shootID = 1
-local function fireClick()
-	if LKHooks.IsMouseDown(1) then
-		if shootFlag then
-			return
-		end
-		shootID = shootID + 1
-
-
-		local tag = "BoxShoot" .. shootID
-		FLK3D.AddPhysicsBodyToUniv(tag)
-		FLK3D.SetPhysicsBodyScl(tag, Vector(1, 1, 1))
-		FLK3D.SetPhysicsBodyPos(tag, -FLK3D.GetCamPos())
-		FLK3D.SetPhysicsBodyVel(tag, -FLK3D.GetCamDir() * 25)
-		FLK3D.SetPhysicsBodyStatic(tag, false)
-
-
-
-		shootFlag = true
-	elseif shootFlag then
-		shootFlag = false
-	end
-
-end
-
-
-LKHooks.Add("Think", "Physics", function(dt)
-	FLK3D.PushUniverse(univ)
-		FLK3D.PhysicsThink(dt)
-		--fireClick()
-		FLK3D.DebugRenderPhysicsObjects()
 	FLK3D.PopUniverse()
 end)
 
 
-
-local shiftTable = {
-	[ 1] = 1,
-	[ 2] = 2,
-	[ 3] = 4,
-	[ 4] = 8,
-	[ 5] = 16,
-	[ 6] = 32,
-	[ 7] = 64,
-	[ 8] = 128,
-	[ 9] = 256,
-	[10] = 512,
-	[11] = 1024,
-	[12] = 2048,
-	[13] = 4096,
-	[14] = 8192,
-	[15] = 16384,
-	[16] = 32768,
-}
-
-local invShiftTable = {
-	[    1] = 1,
-	[    2] = 2,
-	[    4] = 3,
-	[    8] = 4,
-	[   16] = 5,
-	[   32] = 6,
-	[   64] = 7,
-	[  128] = 8,
-	[  256] = 9,
-	[  512] = 10,
-	[ 1024] = 11,
-	[ 2048] = 12,
-	[ 4096] = 13,
-	[ 8192] = 14,
-	[16384] = 15,
-	[32768] = 16,
-}
-
-local function math_round(x)
-	return math.ceil(x + .5)
-end
-
-
-local gb_1_16 = 1 / 16
-local gb_1_8  = 1 / 8
-local gb_1_4  = 1 / 4
 LKHooks.Add("Render", "TestRender", function()
 	FLK3D.PushUniverse(univ)
 	FLK3D.PushRenderTarget(rt)
-		FLK3D.ClearHalfed(COLOR_BACKGROUND, true)
-		--FLK3D.ClearDepth()
+		--FLK3D.ClearHalfed(COLOR_BACKGROUND, true)
+		FLK3D.ClearDepth()
 		FLK3D.RenderActiveUniverse()
 		FLK3D.RenderRTToScreen()
 	FLK3D.PopRenderTarget()
 	FLK3D.PopUniverse()
-
-
-
-	--[[
-	local cPos = FLK3D.GetCamPos()
-	term.setCursorPos(1, 1)
-	term.write("Pos: v(" .. cPos[1] .. ", " .. cPos[2] .. ", " .. cPos[3] .. ")")
-
-	local cDir = FLK3D.GetCamDir()
-	term.setCursorPos(1, 2)
-	term.write("Dir: v(" .. cDir[1] .. ", " .. cDir[2] .. ", " .. cDir[3] .. ")")
-
-	local frameNum = LKHooks.GetFrameNumber()
-	term.setCursorPos(1, 3)
-	term.write("Frame: " .. frameNum)
-	]]--
 end)
 
 
 LKHooks.BeginProgram()
-
---[[
-		FLK3D.ApplyOpHalfed(function(getRT, index, xc, yc, w, h)
-			local tl = getRT[index - w - 1] or colors.black
-			local tc = getRT[index - w] or colors.black
-			local tr = getRT[index - w + 1] or colors.black
-
-			local cl = getRT[index - 1] or colors.black
-			local cc = getRT[index] or colors.black
-			local cr = getRT[index + 1] or colors.black
-
-			local bl = getRT[index + w - 1] or colors.black
-			local bc = getRT[index + w] or colors.black
-			local br = getRT[index + w + 1] or colors.black
-
-			tl = invShiftTable[tl] * gb_1_16
-			tc = invShiftTable[tc] * gb_1_8
-			tr = invShiftTable[tr] * gb_1_16
-
-			cl = invShiftTable[cl] * gb_1_8
-			cc = invShiftTable[cc] * gb_1_4
-			cr = invShiftTable[cr] * gb_1_8
-
-			bl = invShiftTable[bl] * gb_1_16
-			bc = invShiftTable[bc] * gb_1_8
-			br = invShiftTable[br] * gb_1_16
-
-			--print(cc)
-
-			average = (tl + tc + tr + cl + cc + cr + bl + bc + br)
-			average = math.min(math.max(math_round(average), 0), 16)
-
-			finalOut = shiftTable[average]
-			return finalOut
-		end)
-]]--
