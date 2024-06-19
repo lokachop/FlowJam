@@ -16,12 +16,21 @@ function FLK3D.GetRootDirectory()
 end
 
 
-
+print("FLK3D Loading...")
 function FLK3D.LoadFile(path)
     local loadPath = rootDir .. path
-    print("-> " .. loadPath)
+    print(":: " .. loadPath)
     require(loadPath)
 end
+
+FLK3D.DataPath = shell.resolve("./" .. string.sub(rootDir, 1, #rootDir - 1) .. "/")
+function FLK3D.SetDataPath(path)
+    print("PrevDataPath; " .. FLK3D.DataPath)
+    FLK3D.DataPath = path
+    print("NewDataPath ; " .. FLK3D.DataPath)
+end
+
+
 
 FLK3D.LoadFile("libs.lmat") -- make sure to load lmat first
 FLK3D.LoadFile("libs.lvec")

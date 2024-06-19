@@ -214,3 +214,29 @@ function FLK3D.DeclareModelOBJ(name, objData)
 	FLK3D.GenerateNormals(name, false, hadNormal)
 	print("Declared model \"" .. name .. "\" with " .. #data.verts .. " verts! ^[OBJ]")
 end
+
+
+local function readFile(filePath)
+	local realPath = FLK3D.DataPath .. "/" .. filePath
+
+	local fPtr = fs.open(realPath, "r")
+	if not fPtr then
+		error("Could not read file \"" .. realPath .. "\"")
+		return
+	end
+
+	local cont = fPtr.readAll()
+	fPtr.close()
+
+	return cont
+end
+
+
+function FLK3D.LoadModelOBJ(name, path)
+	local objData = readFile(path)
+	if not objData then
+		return
+	end
+
+	FLK3D.DeclareModelOBJ(name, objData)
+end

@@ -18,6 +18,18 @@ function FLK3D.ReplacePaletteColour(index, r, g, b)
 	term.setPaletteColor(index, r / 255, g / 255, b / 255)
 end
 
+function FLK3D.ReplacePaletteColourFloat(index, r, g, b)
+	term.setPaletteColor(index, r, g, b)
+end
+
+function FLK3D.ReplacePaletteColourPacked(index, tbl)
+	term.setPaletteColor(index, tbl[1] / 255, tbl[2] / 255, tbl[3] / 255)
+end
+
+function FLK3D.ReplacePaletteColourFloatPacked(index, tbl)
+	term.setPaletteColor(index, tbl[1], tbl[2], tbl[3])
+end
+
 local stockColours = {
 	[    1] = {240, 240, 240},
 	[    2] = {242, 178,  51},

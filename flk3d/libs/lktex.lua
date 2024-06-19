@@ -53,7 +53,7 @@ end
 
 local function readAndGetFileObject(path)
 	if _COMPUTERCRAFT then
-		local f = fs.open(getRealPath(path), "rb")
+		local f = fs.open(FLK3D.DataPath .. "/" .. path, "rb")
 		return f
 	else
 		local f = love.filesystem.newFile(path)
@@ -150,13 +150,13 @@ function LKTEX.LoadPPM(name, path, colourConverts)
 			isComment = nil
 		end
 	end
-	print(isComment)
+	--print(isComment)
 	-- read the width and height
 	local w = tonumber(readUntil(fObj, 32, isComment))
 	local h = tonumber(readUntil(fObj, 10))
 
 	local cDepth = tonumber(readUntil(fObj, 10))
-	print("Texture is " .. w .. "x" .. h .. " with a coldepth of " .. cDepth)
+	--print("Texture is " .. w .. "x" .. h .. " with a coldepth of " .. cDepth)
 	--error("help")
 
 	local pixToRead = w * h

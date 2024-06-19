@@ -19,45 +19,14 @@ end
 
 
 require("flk3d.flk3d")
+local dataPath = shell.resolve("./data/")
+FLK3D.SetDataPath(dataPath)
+
 require("lkhooks.lkhooks")
+
+
+
 require("flowjam.flowjam")
-
-
-
-FLK3D.ResetPalette()
-
-COLOR_WHITE = FLK3D.DeclareNewPaletteColour(255, 255, 255)
-COLOR_BLACK = FLK3D.DeclareNewPaletteColour(24, 24, 24)
-
-COLOR_BACKGROUND = FLK3D.DeclareNewPaletteColour(160, 196, 220)
-
-
-COLOR_GREEN_BR = FLK3D.DeclareNewPaletteColour(64, 220, 64)
-
-COLOR_GREEN_DR = FLK3D.DeclareNewPaletteColour(16, 96, 16)
-
-COLOR_TEST1 = FLK3D.DeclareNewPaletteColour(255, 255, 16)
-COLOR_TEST2 = FLK3D.DeclareNewPaletteColour(255, 128, 16)
-COLOR_TEST3 = FLK3D.DeclareNewPaletteColour(255,  64, 16)
-COLOR_TEST4 = FLK3D.DeclareNewPaletteColour(255,   0, 16)
-
-
-LKTEX.LoadPPM("test1", "textures/tex_test.ppm", {
-	[LKTEX.ColourHash(106, 190, 48)] = COLOR_TEST1,
-	[LKTEX.ColourHash(172, 50, 50)] = COLOR_TEST2,
-	[LKTEX.ColourHash(118, 66, 138)] = COLOR_TEST3,
-	[LKTEX.ColourHash(155, 173, 183)] = COLOR_TEST4,
-})
-
-COLOR_OCEAN1 = FLK3D.DeclareNewPaletteColour(16,  64, 220)
-COLOR_OCEAN2 = FLK3D.DeclareNewPaletteColour(64, 128, 255)
-
-LKTEX.LoadPPM("ocean_tex", "textures/tex_ocean.ppm", {
-	[LKTEX.ColourHash(91, 110, 225)] = COLOR_OCEAN1,
-	[LKTEX.ColourHash(99, 155, 255)] = COLOR_OCEAN2,
-})
-
-
 
 
 
@@ -245,8 +214,8 @@ end)
 LKHooks.Add("Render", "TestRender", function()
 	FLK3D.PushUniverse(univ)
 	FLK3D.PushRenderTarget(rt)
-		--FLK3D.ClearHalfed(COLOR_BACKGROUND, true)
-		FLK3D.ClearDepth()
+		FLK3D.ClearHalfed(COLOR_BACKGROUND, true)
+		--FLK3D.ClearDepth()
 		FLK3D.RenderActiveUniverse()
 		FLK3D.RenderRTToScreen()
 	FLK3D.PopRenderTarget()
