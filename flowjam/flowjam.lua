@@ -13,6 +13,7 @@ end
 
 FlowJam.LoadFile("util")
 FlowJam.LoadFile("palettes")
+FlowJam.LoadFile("debugcam")
 
 FlowJam.LoadFile("loaders.load_models")
 FlowJam.LoadFile("loaders.load_textures")
