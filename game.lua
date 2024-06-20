@@ -27,31 +27,12 @@ require("flowjam.flowjam")
 
 FlowJam.SetState(STATE_MENU)
 
-
-
-
-
---[[
-LKHooks.Add("Think", "Movement", function(dt)
-	mouseThink()
-end)
-]]--
-
---[[
-LKHooks.Add("Render", "TestRender", function()
-	FLK3D.PushUniverse(univ)
-	FLK3D.PushRenderTarget(rt)
-		FLK3D.ClearHalfed(COLOR_BACKGROUND, true)
-		--FLK3D.ClearDepth()
-		FLK3D.RenderActiveUniverse()
-		FLK3D.RenderRTToScreen()
-	FLK3D.PopRenderTarget()
-	FLK3D.PopUniverse()
-end)
-]]--
-
 LKHooks.Add("Think", "ProgramThink", function(dt)
 	FlowJam.StateThink(dt)
+end)
+
+LKHooks.Add("Think", "SoundThink", function(dt)
+	FlowJam.SoundThink(dt)
 end)
 
 LKHooks.Add("Render", "ProgramRender", function(dt)

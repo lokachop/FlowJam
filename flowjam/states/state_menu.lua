@@ -15,6 +15,8 @@ local function setPalette()
 	FLK3D.ReplacePaletteColour(PALETTE_4, 84 * .5, 88 * .5, 94 * .5) -- boat2
 	FLK3D.ReplacePaletteColour(PALETTE_5, 84, 140, 220) -- boat3, glass
 
+
+	FLK3D.ReplacePaletteColour(PALETTE_13, 255, 140, 32) -- selected option
 	FLK3D.ReplacePaletteColour(PALETTE_14, 140 * .75, 180 * .75, 220 * .75) -- sky
 end
 
@@ -35,13 +37,24 @@ FLK3D.PushUniverse(univMenu)
 
 
 	FLK3D.AddObjectToUniv("boat", "boat")
-	FLK3D.SetObjectPos("boat", Vector(0, 1, 0))
+	FLK3D.SetObjectPos("boat", Vector(0, 0.3, 0))
 	FLK3D.SetObjectAng("boat", Angle(0, 25, 0))
 	FLK3D.SetObjectScl("boat", Vector(2, 2, 2))
 	FLK3D.SetObjectFlag("boat", "COL_OUTLINE", COLOR_BLACK)
-	FLK3D.SetObjectFlag("boat", "DO_OUTLINE", true)
+	FLK3D.SetObjectFlag("boat", "DO_OUTLINE", false)
 	FLK3D.SetObjectFlag("boat", "OUTLINE_SCALE", 0.3)
 	FLK3D.SetObjectMat("boat", "metal_tex")
+
+	FLK3D.AddObjectToUniv("boatShadow", "boat_singlemesh")
+	FLK3D.SetObjectPos("boatShadow", Vector(0, 0.3, 0))
+	FLK3D.SetObjectAng("boatShadow", Angle(0, 25, 0))
+	FLK3D.SetObjectScl("boatShadow", Vector(2, 2, 2))
+	FLK3D.SetObjectFlag("boatShadow", "COL_HIGHLIGHT", COLOR_BLACK)
+	FLK3D.SetObjectFlag("boatShadow", "NO_BACKFACE_CULL", true)
+
+
+	local shadowMatrix = FlowJam.GetShadowMatrix(0.05, Vector(0, 1, 0), FLK3D.SunDir)
+	FLK3D.SetObjectFlag("boatShadow", "SHADOW_MATRIX", shadowMatrix)
 
 	--[[
 	FLK3D.SetObjectFlag("boat", "SHADING", true)
@@ -52,9 +65,8 @@ FLK3D.PushUniverse(univMenu)
 	]]--
 
 
-
 	FLK3D.AddObjectToUniv("boat_window", "boat_window")
-	FLK3D.SetObjectPos("boat_window", Vector(0, 1, 0))
+	FLK3D.SetObjectPos("boat_window", Vector(0, 0.3, 0))
 	FLK3D.SetObjectAng("boat_window", Angle(0, 25, 0))
 	FLK3D.SetObjectScl("boat_window", Vector(2, 2, 2))
 	FLK3D.SetObjectFlag("boat_window", "COL_OUTLINE", PALETTE_5)
@@ -89,33 +101,135 @@ FLK3D.PushUniverse(univMenu)
 FLK3D.PopUniverse()
 
 
+local selectedButton = 0
+local buttonCount = 2
+
+local keyFlag = false
+local function mainMenuButtonThink()
+	local keyMoveUp = LKHooks.IsKeyDown(keys.w) or LKHooks.IsKeyDown(keys.up)
+	local keyMoveDown = LKHooks.IsKeyDown(keys.s) or LKHooks.IsKeyDown(keys.down)
+
+
+	if keyFlag and not (keyMoveUp or keyMoveDown) then
+		keyFlag = false
+	end
+
+	if keyFlag then
+		return
+	end
+
+	if keyMoveUp then
+		selectedButton = selectedButton - 1
+		keyFlag = true
+	end
+
+	if keyMoveDown then
+		selectedButton = selectedButton + 1
+		keyFlag = true
+	end
+
+	if selectedButton < 0 then
+		selectedButton = buttonCount
+	elseif selectedButton > buttonCount then
+		selectedButton = 0
+	end
+end
+
+
+local function buttonPressThink()
+	if not (LKHooks.IsKeyDown(keys.space) or LKHooks.IsKeyDown(keys.enter)) then
+		return
+	end
+
+	-- this IS BAD
+	if selectedButton == 0 then -- Play
+		FlowJam.SetState(STATE_GAME)
+	elseif selectedButton == 1 then -- Credits
+
+	else -- Quit
+		FLK3D.ResetPalette()
+		LKHooks.ExitProgram()
+		term.setBackgroundColor(colors.black)
+		term.clear()
+
+		local sw, sh = FlowJam.GetTermDimensions()
+
+
+		FlowJam.APrint("--==[GAME TITLE]==--", sw * .5, 1, colors.white, colors.black, TEXT_ALIGN_CENTER)
+
+		local textNames = "A game by Lokachop & Lefton"
+		local tWNames = #textNames
+		term.setCursorPos(math.floor(sw * .5 - tWNames * .5), 2)
+		term.write("A game by ")
+
+		term.setTextColor(colors.lime)
+		term.write("Lokachop")
+
+		term.setTextColor(colors.white)
+		term.write(" & ")
+
+		term.setTextColor(colors.orange)
+		term.write("Lefton")
+
+		term.setTextColor(colors.white)
+
+		FlowJam.APrint("Coded for PineJam 2024", sw * .5, 3, colors.white, colors.black, TEXT_ALIGN_CENTER)
+		FlowJam.APrint("Thanks for playing!", sw * .5, 4, colors.white, colors.black, TEXT_ALIGN_CENTER)
+
+		term.setCursorPos(1, 5)
+	end
+end
+
+
 function state.onThink(dt)
 	local cTime = FlowJam.CurTime()
 	local angBoat = Angle(math.sin(cTime * 2) * 4, 25 + math.cos(cTime * 0.5) * 6, math.cos(cTime * 1.433) * 4)
 
 	FLK3D.PushUniverse(univMenu)
 		FLK3D.SetObjectAng("boat", angBoat)
+		FLK3D.SetObjectAng("boatShadow", angBoat)
 		FLK3D.SetObjectAng("boat_window", angBoat)
 	FLK3D.PopUniverse()
 
 	if not FlowJam.DebugCamThink(dt) then
-		FLK3D.SetCamPos(Vector(4, -2, -1.5))
-		FLK3D.SetCamAng(Angle(-3, -42, 0))
+		FLK3D.SetCamPos(Vector(2.5, -1.5, 4.5))
+		FLK3D.SetCamAng(Angle(-12, -140, 0))
 	end
+
+	mainMenuButtonThink()
+	buttonPressThink()
 end
-
-
-
 
 
 
 local function renderMainMenu()
-	local sw, sh = FlowJam.GetDimensions()
+	local sw, sh = FlowJam.GetTermDimensions()
 
+	local logoX, logoY = 1, sh * .2
+	FlowJam.APrint("=========================", logoX, logoY - 1, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
+	FlowJam.APrint("====[GAME TITLE HERE]====", logoX, logoY, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
+	FlowJam.APrint("=========================", logoX, logoY + 1, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
+
+	local colOptionPlay = selectedButton == 0 and PALETTE_13 or COLOR_BLACK
+	FlowJam.APrint("[Play]", 1, sh * .4, COLOR_WHITE, colOptionPlay, TEXT_ALIGN_LEFT)
+
+	local colOptionCredits = selectedButton == 1 and PALETTE_13 or COLOR_BLACK
+	FlowJam.APrint("[Credits]", 1, sh * .5, COLOR_WHITE, colOptionCredits, TEXT_ALIGN_LEFT)
+
+	local colOptionExit = selectedButton == 2 and PALETTE_13 or COLOR_BLACK
+	FlowJam.APrint("[Exit]", 1, sh * .6, COLOR_WHITE, colOptionExit, TEXT_ALIGN_LEFT)
 end
 
-
+local dtFrameSkip = 1 / 60
+local nextFrame = 0
 function state.onRender()
+	-- limit to 60fps on mainmenu
+	local cTime = FlowJam.CurTime()
+	if cTime < nextFrame then
+		return
+	end
+	nextFrame = cTime + dtFrameSkip
+
 	FLK3D.PushUniverse(univMenu)
 	FLK3D.PushRenderTarget(rtMenu)
 		FLK3D.ClearHalfed(PALETTE_14, true)
@@ -123,6 +237,8 @@ function state.onRender()
 		FLK3D.RenderRTToScreen()
 	FLK3D.PopRenderTarget()
 	FLK3D.PopUniverse()
+
+	renderMainMenu()
 end
 
 function state.onEnter()

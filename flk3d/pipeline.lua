@@ -267,6 +267,7 @@ local function renderObject(obj, isOutline)
 	local matrixRot = obj.mat_rot
 	local matrixPos = obj.mat_pos
 	local matrixTransRot = FLK3D.CamMatrix_Rot * FLK3D.CamMatrix_Trans
+	local matrixShadow = obj["SHADOW_MATRIX"]
 
 	if isOutline then
 		local sclMul = obj["OUTLINE_SCALE"] or outlineScaleStock
@@ -284,6 +285,9 @@ local function renderObject(obj, isOutline)
 		cpy = cpy * matrixScale
 		cpy = cpy * matrixRot
 		cpy = cpy * matrixPos
+		if matrixShadow then
+			cpy = cpy * matrixShadow
+		end
 
 		-- TODO: implement cam matrix
 		cpy = cpy * matrixTransRot

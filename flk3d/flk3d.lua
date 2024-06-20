@@ -1,11 +1,11 @@
 FLK3D = FLK3D or {}
 FLK3D.Version = "0.3CC"
-FLK3D.Debug = true
+FLK3D.Debug = false
 
 FLK3D.DO_PERSP_CORRECT_COLOUR   = true
 FLK3D.DO_PERSP_CORRECT_TEXTURE  = true
 
-FLK3D.TEXINTERP_MODE = 0 -- 0 = nearest, 1 = bayer, 2 = random
+FLK3D.TEXINTERP_MODE = 1 -- 0 = nearest, 1 = bayer, 2 = random
 FLK3D.WIREFRAME = false
 FLK3D.RENDER_HALF = true
 FLK3D.VIEWPOS_SHADING = true

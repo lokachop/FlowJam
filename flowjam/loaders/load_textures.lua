@@ -20,3 +20,9 @@ LKTEX.LoadPPM("glass_tex", "textures/tex_glass.ppm", {
 	[LKTEX.ColourHash(99, 155, 255)] = PALETTE_5, -- glass
 	[LKTEX.ColourHash(255, 255, 255)] = COLOR_WHITE, -- metal2
 })
+
+
+LKTEX.LoadPPM("cloud_glass", "textures/tex_cloud.ppm", {
+	[LKTEX.ColourHash(255, 0, 0)] = PALETTE_5, -- sky
+	[LKTEX.ColourHash(255, 255, 255)] = COLOR_WHITE, -- cloud col
+})

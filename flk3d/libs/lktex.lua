@@ -120,7 +120,7 @@ end
 function LKTEX.LoadPPM(name, path, colourConverts)
 	local data = {}
 
-	print("---LKTEX-PPMLoad---")
+	--print("---LKTEX-PPMLoad---")
 	print("Loading texture at \"" .. path .. "\"")
 
 

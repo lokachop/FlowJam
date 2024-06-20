@@ -8,15 +8,19 @@ end
 
 function FlowJam.LoadFile(path)
     local loadPath = rootDir .. path
+    print("> " .. loadPath)
     require(loadPath)
 end
 
 FlowJam.LoadFile("util")
 FlowJam.LoadFile("palettes")
 FlowJam.LoadFile("debugcam")
+FlowJam.LoadFile("shadows")
+FlowJam.LoadFile("sound")
 
 FlowJam.LoadFile("loaders.load_models")
 FlowJam.LoadFile("loaders.load_textures")
 
 FlowJam.LoadFile("state_handler")
     FlowJam.LoadFile("states.state_menu")
+    FlowJam.LoadFile("states.state_game")
