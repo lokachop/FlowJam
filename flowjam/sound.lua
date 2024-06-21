@@ -11,24 +11,85 @@ end
 
 local volume = 0.1
 -- generates and returns the sound buffer to play
-local lastTCounter = 0
-local buffSize = 16 * 1024
-local function generateBuffer()
-	local buff = {}
-	for i = 1, buffSize do
-		local realTime = (i + lastTCounter)
+local targetSampleRate = 44100
 
-		local t = (realTime / buffSize) * 3000
 
-		--buff[i] = bit32.band(bit32.rshift(t, 10), 42) * t
-		--buff[i] = (bit32.band(t*(bit32.bxor(bit32.bor(t/10, 0), bit32.bor(t/10, 0)-1280)%11)/2, 127) + bit32.band(t*(bit32.bxor(bit32.bor(t/640, 0), bit32.bor(t/640, 0)-2)%13)/2, 127))
+local buffSize = 128 * 1024
+local decoder = dfpwm.make_decoder()
 
-		buff[i] = ((buff[i] % 256) - 127) * volume
-		--buff[i] = math.sin((realTime / buffSize) * 440) * 127
+local currSongBlocks = {}
+local currSongBlockCount = 0
+local function loadSong(path, sampleRate)
+	local tW, tH = FlowJam.GetTermDimensions()
+
+	print("-> songLoad \"" .. path .. "\"")
+	print("step1")
+	print("[                                ]")
+	currSongBlocks = {}
+
+	local realPath = FLK3D.DataPath .. "/" .. path
+
+	local repTimes = targetSampleRate / (sampleRate or 8000)
+	local repAccum = 0
+
+	term.setCursorPos(1, tH - 2)
+	term.write("LineParse")
+	local listFull = {}
+	for line in io.lines(realPath, buffSize) do
+		term.setCursorPos(1, tH - 2)
+		term.write("DecodeBlock")
+		local dec = decoder(line)
+		for i = 1, #dec do
+			local deltaProg = (i / #dec)
+			term.setCursorPos(2, tH - 1)
+			term.write(string.rep(":", deltaProg * 32))
+
+
+			for j = repAccum, repAccum + repTimes do
+				listFull[#listFull + 1] = dec[i]
+			end
+			repAccum = repAccum + repTimes
+		end
+
+		term.setCursorPos(2, tH - 1)
+		term.write(string.rep(" ", 32))
 	end
-	lastTCounter = lastTCounter + buffSize
 
-	return buff
+
+	term.setCursorPos(1, tH - 2)
+	term.write("ReSample      ")
+
+	term.setCursorPos(2, tH - 1)
+	term.write(string.rep(" ", 32))
+	for i = 1, #listFull, buffSize do
+		local deltaProg = i / #listFull
+		term.setCursorPos(2, tH - 1)
+		term.write(string.rep(":", deltaProg * 32))
+
+		local newBlock = {}
+
+		for j = 1, buffSize do
+			newBlock[#newBlock + 1] = listFull[j + i] or 0
+		end
+
+		currSongBlocks[#currSongBlocks + 1] = newBlock
+	end
+
+
+
+	currSongBlockCount = #currSongBlocks
+end
+
+loadSong("sound/general1.dfpwm", 11500)
+
+
+local currLine = 0
+local function generateBuffer()
+	currLine = (currLine % currSongBlockCount) + 1
+
+	local vals = currSongBlocks[currLine]
+
+	return vals
 end
 
 local nextPlay = 0
@@ -39,11 +100,7 @@ function FlowJam.SoundThink(dt)
 	end
 
 	nextPlay = cTime + (buffSize / 48000)
-	print("PLAY")
 
 	local buff = generateBuffer()
 	speaker.playAudio(buff)
-	--while not speaker.playAudio(buff) do
-		--os.pullEvent("speaker_audio_empty")
-	--end
 end
