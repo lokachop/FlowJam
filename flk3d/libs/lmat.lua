@@ -17,6 +17,8 @@ local math_cos = math.cos
 local math_sin = math.sin
 
 
+local up = {0, 1, 0}
+
 local matcb = {}
 local temp_r1, temp_r2, temp_r3
 local mat_meta = {
@@ -205,6 +207,47 @@ local mat_meta = {
         yaw = math.deg(yaw)
 
         return Angle(-roll, pitch, yaw)
+    end,
+
+    ["SetDirection"] = function(x, y)
+        local xAxis = {
+            up[2] * y[3] - up[3] * y[2],
+            up[3] * y[1] - up[1] * y[3],
+            up[1] * y[2] - up[2] * y[1]
+        }
+        local l = math_sqrt(xAxis[1] ^ 2 + xAxis[2] ^ 2 + xAxis[3] ^ 2)
+        xAxis[1] = xAxis[1] / l
+        xAxis[2] = xAxis[2] / l
+        xAxis[3] = xAxis[3] / l
+
+        local yAxis = {
+            y[2] * xAxis[3] - x[3] * xAxis[2],
+            y[3] * xAxis[1] - x[1] * xAxis[3],
+            y[1] * xAxis[2] - x[2] * xAxis[1]
+        }
+        l = math_sqrt(yAxis[1] ^ 2 + yAxis[2] ^ 2 + yAxis[3] ^ 2)
+        yAxis[1] = yAxis[1] / l
+        yAxis[2] = yAxis[2] / l
+        yAxis[3] = yAxis[3] / l
+
+        --[[
+            x[ 1], x[ 2], x[ 3], x[ 4],
+            x[ 5], x[ 6], x[ 7], x[ 8],
+            x[ 9], x[10], x[11], x[12],
+            x[13], x[14], x[15], x[16]
+        ]]--
+
+        x[ 1] = xAxis[1]
+        x[ 5] = yAxis[1]
+        x[ 9] = y[1]
+
+        x[ 2] = xAxis[2]
+        x[ 6] = yAxis[2]
+        x[10] = y[2]
+
+        x[ 3] = xAxis[3]
+        x[ 7] = yAxis[3]
+        x[11] = y[3]
     end,
 
     ["GetTranslation"] = function(x)

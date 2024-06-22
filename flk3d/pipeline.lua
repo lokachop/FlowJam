@@ -262,6 +262,7 @@ local function renderObject(obj, isOutline)
 	local normInvert = isOutline or obj["NORM_INVERT"]
 	local noBFCull = obj["NO_BACKFACE_CULL"] and (not isOutline)
 	local vertShader = obj["VERT_SHADER"]
+	local shadeDither = obj["SHADE_DITHER"]
 
 	local matrixScale = obj.mat_scl
 	local matrixRot = obj.mat_rot
@@ -495,6 +496,7 @@ local function renderObject(obj, isOutline)
 			FLK3D.Raster_SetShadeValue(col_s1, col_s2, col_s3)
 			FLK3D.Raster_SetDepthTested(true)
 			FLK3D.Raster_SetW(v1_w, v2_w, v3_w)
+			FLK3D.Raster_SetShadeDither(shadeDither and true or false)
 
 
 			FLK3D.Raster_SetTextured(false)

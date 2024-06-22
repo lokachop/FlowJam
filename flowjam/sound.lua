@@ -1,31 +1,38 @@
 FlowJam = FlowJam or {}
+
+if periphemu then
+	periphemu.create("left", "speaker")
+end
+
+
 local dfpwm = require("cc.audio.dfpwm")
 local speaker = peripheral.find("speaker")
 
 if not speaker then
 	print("/!\\ No speaker found! /!\\")
-	function FlowJam.SoundThink() end
+	function FlowJam.SetSong(name) end
+	function FlowJam.SoundThink(dt) end
 
 	return
 end
 
-local volume = 0.1
+
 -- generates and returns the sound buffer to play
+-- TODO: convert to store table of tables of ALL songs, so we only need to load once
 local targetSampleRate = 44100
 
 
 local buffSize = 128 * 1024
 local decoder = dfpwm.make_decoder()
 
-local currSongBlocks = {}
-local currSongBlockCount = 0
-local function loadSong(path, sampleRate)
+
+local songRegistry = {}
+local function loadSong(name, path, sampleRate)
 	local tW, tH = FlowJam.GetTermDimensions()
 
 	print("-> songLoad \"" .. path .. "\"")
 	print("step1")
 	print("[                                ]")
-	currSongBlocks = {}
 
 	local realPath = FLK3D.DataPath .. "/" .. path
 
@@ -61,6 +68,7 @@ local function loadSong(path, sampleRate)
 
 	term.setCursorPos(2, tH - 1)
 	term.write(string.rep(" ", 32))
+	local blocks = {}
 	for i = 1, #listFull, buffSize do
 		local deltaProg = i / #listFull
 		term.setCursorPos(2, tH - 1)
@@ -69,31 +77,60 @@ local function loadSong(path, sampleRate)
 		local newBlock = {}
 
 		for j = 1, buffSize do
-			newBlock[#newBlock + 1] = listFull[j + i] or 0
+			newBlock[#newBlock + 1] = listFull[j + i]
 		end
 
-		currSongBlocks[#currSongBlocks + 1] = newBlock
+		blocks[#blocks + 1] = newBlock
 	end
 
-
-
-	currSongBlockCount = #currSongBlocks
+	songRegistry[name] = {
+		["path"] = path,
+		["blockCount"] = #blocks,
+		["blocks"] = blocks,
+	}
+	print("\n")
 end
 
-loadSong("sound/general1.dfpwm", 11500)
+--loadSong("general1", "sound/general1.dfpwm", 11500)
+--loadSong("menu1", "sound/songmenu.dfpwm", 8000)
+--loadSong("tuto1", "sound/songtuto.dfpwm", 8000)
 
 
-local currLine = 0
+local activeSong = "none"
+local currBlock = 0
+
+local currSongBlocks = {}
+local currSongBlockCount = 0
+function FlowJam.SetSong(name)
+	local data = songRegistry[name]
+	if not data then
+		return
+	end
+
+	currSongBlocks = data.blocks
+	currSongBlockCount = data.blockCount
+	currBlock = 0
+	activeSong = name
+end
+
+
+
+
 local function generateBuffer()
-	currLine = (currLine % currSongBlockCount) + 1
+	currBlock = (currBlock % currSongBlockCount) + 1
 
-	local vals = currSongBlocks[currLine]
+	local vals = currSongBlocks[currBlock]
 
 	return vals
 end
 
 local nextPlay = 0
 function FlowJam.SoundThink(dt)
+	if activeSong == "none" then
+		return
+	end
+
+
 	local cTime = LKHooks.CurTime()
 	if nextPlay > cTime then
 		return

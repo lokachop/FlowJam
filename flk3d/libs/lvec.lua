@@ -193,6 +193,33 @@ local v_meta = {
     ["DistToSqr"] = function(x, y)
         return math.pow(x[1] - y[1], 2) + math.pow(x[2] - y[2], 2) + math.pow(x[3] - y[3], 2)
     end,
+
+    ["ToAngle"] = function(x)
+        local tmp, yaw, pitch
+
+        if (x[3] == 0 and x[1] == 0) then
+            yaw = 0
+            if (x[2] > 0) then
+                pitch = 270
+            else
+                pitch = 90
+            end
+        else
+            yaw = (math.atan2(x[3], x[1]) * 180 / math.pi)
+            if (yaw < 0) then
+                yaw = yaw + 360
+            end
+
+            tmp = math.sqrt(x[1] * x[1] + x[3] * x[3])
+            pitch = (math.atan2(-x[2], tmp) * 180 / math.pi)
+            if pitch < 0 then
+                pitch = pitch + 360
+            end
+        end
+
+        return Vector(pitch, -yaw + 90, 0)
+    end,
+
     ["isvec"] = true
 }
 

@@ -419,6 +419,10 @@ function FLK3D.Raster_SetShadeValue(sv0, sv1, sv2)
 	_sv2 = sv2
 end
 
+local _shadeDither = false
+function FLK3D.Raster_SetShadeDither(shadeDither)
+	_shadeDither = shadeDither
+end
 
 local _depth = false
 function FLK3D.Raster_SetDepthTested(bool)
@@ -608,15 +612,25 @@ function FLK3D.RenderTriangleParams()
 				if texMode == _TEX_NEAREST then
 					local tu = math_floor(texW * uCalc) % texW
 					local tv = math_floor(texH * vCalc) % texH
-					rt[x + (y * rtW)] = _texdata[tu + (tv * texW)]
+
+					local val = _texdata[tu + (tv * texW)]
+					if val == -1 then
+						goto _contBary
+					end
+
+					rt[x + (y * rtW)] = val
 				elseif texMode == _TEX_BAYER then
 					local bayerIdx = (x % 4) + ((y % 4) * 4) + 1
 
 					local tu = math_floor((texW * uCalc) + bayer4[bayerIdx]) % texW
 					local tv = math_floor((texH * vCalc) + bayer4[bayerIdx]) % texH
 
+					local val = _texdata[tu + (tv * texW)]
+					if val == -1 then -- transparent Colour
+						goto _contBary
+					end
 
-					rt[x + (y * rtW)] = _texdata[tu + (tv * texW)]
+					rt[x + (y * rtW)] = val
 				elseif texMode == _TEX_RANDOM then
 					math.randomseed(x + (y * rtW))
 					local add = math.random() * .5
@@ -624,14 +638,32 @@ function FLK3D.RenderTriangleParams()
 					local tu = math_floor((texW * uCalc) + add) % texW
 					local tv = math_floor((texH * vCalc) + add) % texH
 
-					rt[x + (y * rtW)] = _texdata[tu + (tv * texW)]
+					local val = _texdata[tu + (tv * texW)]
+					if val == -1 then
+						goto _contBary
+					end
+
+					rt[x + (y * rtW)] = val
 				end
 			else
 				local shadingCalc = ((w0 * _sv0) + (w1 * _sv1) + (w2 * _sv2))
 				if perspCol then
 					shadingCalc = shadingCalc / negW
 				end
-				rt[x + (y * rtW)] = shadingCalc >= _colThreshold and _colHigh or _colShade
+
+				if _shadeDither then
+					local bayerIdx = (x % 4) + ((y % 4) * 4) + 1
+
+					local shadeDelta = math.min(shadingCalc / _colThreshold, 1)
+
+					local bayerVal = bayer4[bayerIdx]
+					local thresholdNew = (shadingCalc + (bayerVal * 1)) - .25 --(bayerVal * shadeDelta)
+
+					rt[x + (y * rtW)] = thresholdNew >= _colThreshold and _colHigh or _colShade
+				else
+					rt[x + (y * rtW)] = shadingCalc >= _colThreshold and _colHigh or _colShade
+				end
+				--_shadeDither
 			end
 
 			if _depth then

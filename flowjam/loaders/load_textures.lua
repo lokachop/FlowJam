@@ -6,7 +6,7 @@ LKTEX.LoadPPM("ocean_tex", "textures/tex_ocean.ppm", {
 })
 
 LKTEX.LoadPPM("cloud_tex", "textures/tex_cloud.ppm", {
-	[LKTEX.ColourHash(255, 0, 0)] = PALETTE_14, -- sky
+	[LKTEX.ColourHash(255, 0, 0)] = -1, -- sky
 	[LKTEX.ColourHash(255, 255, 255)] = COLOR_WHITE, -- cloud col
 })
 
@@ -23,6 +23,11 @@ LKTEX.LoadPPM("glass_tex", "textures/tex_glass.ppm", {
 
 
 LKTEX.LoadPPM("cloud_glass", "textures/tex_cloud.ppm", {
-	[LKTEX.ColourHash(255, 0, 0)] = PALETTE_5, -- sky
+	[LKTEX.ColourHash(255, 0, 0)] = PALETTE_5, -- glass
 	[LKTEX.ColourHash(255, 255, 255)] = COLOR_WHITE, -- cloud col
+})
+
+LKTEX.LoadPPM("debug", "textures/tex_debug.ppm", {
+	[LKTEX.ColourHash(255, 0, 0)] = PALETTE_8,
+	[LKTEX.ColourHash(0, 0, 0)] = PALETTE_9,
 })

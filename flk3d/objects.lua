@@ -9,6 +9,7 @@ function FLK3D.AddObjectToUniv(name, mdl)
 	mat_scl:SetScale(Vector(1, 1, 1))
 
 	univ["objects"][name] = {
+		tag = name,
 		mdl = mdl,
 		pos = Vector(0, 0, 0),
 		ang = Angle(0, 0, 0),

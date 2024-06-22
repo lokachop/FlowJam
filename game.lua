@@ -22,6 +22,8 @@ require("flk3d.flk3d")
 local dataPath = shell.resolve("./data/")
 FLK3D.SetDataPath(dataPath)
 
+FLK3D.SetSunDir(Vector(1, 2, 5))
+
 require("lkhooks.lkhooks")
 require("flowjam.flowjam")
 

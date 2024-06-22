@@ -5,7 +5,7 @@ function FlowJam.CurTime()
 end
 
 local tw, th = term.getSize()
-local rw, rh = tw * 3, th * 3
+local rw, rh = tw * 2, th * 3
 
 function FlowJam.GetDimensions()
     return rw, rh

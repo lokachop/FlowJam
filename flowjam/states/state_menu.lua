@@ -16,7 +16,8 @@ local function setPalette()
 	FLK3D.ReplacePaletteColour(PALETTE_5, 84, 140, 220) -- boat3, glass
 
 
-	FLK3D.ReplacePaletteColour(PALETTE_13, 255, 140, 32) -- selected option
+	FLK3D.ReplacePaletteColour(PALETTE_12, 255, 140, 32) -- selected option
+	FLK3D.ReplacePaletteColour(PALETTE_13, 255, 228, 152) -- sun
 	FLK3D.ReplacePaletteColour(PALETTE_14, 140 * .75, 180 * .75, 220 * .75) -- sky
 end
 
@@ -33,6 +34,10 @@ FLK3D.PushUniverse(univMenu)
 
 		vuv[1] = vuv[1] + math.sin((add * 2) + (vY * 4)) + add
 		vuv[2] = vuv[2] + math.cos(add * 0.5 + vX * 2) + add
+
+		-- curv world
+		--local dist = vpos:DistToSqr(Vector(0, 0, 0))
+		--vpos[2] = vpos[2] - (dist * 24)
 	end)
 
 
@@ -43,26 +48,15 @@ FLK3D.PushUniverse(univMenu)
 	FLK3D.SetObjectFlag("boat", "COL_OUTLINE", COLOR_BLACK)
 	FLK3D.SetObjectFlag("boat", "DO_OUTLINE", false)
 	FLK3D.SetObjectFlag("boat", "OUTLINE_SCALE", 0.3)
-	FLK3D.SetObjectMat("boat", "metal_tex")
+	--FLK3D.SetObjectMat("boat", "metal_tex")
+	FLK3D.SetObjectFlag("boat", "PLANAR_SHADOW", true)
+	FLK3D.SetObjectFlag("boat", "PLANAR_SHADOW_MODEL", "boat_singlemesh")
 
-	FLK3D.AddObjectToUniv("boatShadow", "boat_singlemesh")
-	FLK3D.SetObjectPos("boatShadow", Vector(0, 0.3, 0))
-	FLK3D.SetObjectAng("boatShadow", Angle(0, 25, 0))
-	FLK3D.SetObjectScl("boatShadow", Vector(2, 2, 2))
-	FLK3D.SetObjectFlag("boatShadow", "COL_HIGHLIGHT", COLOR_BLACK)
-	FLK3D.SetObjectFlag("boatShadow", "NO_BACKFACE_CULL", true)
-
-
-	local shadowMatrix = FlowJam.GetShadowMatrix(0.05, Vector(0, 1, 0), FLK3D.SunDir)
-	FLK3D.SetObjectFlag("boatShadow", "SHADOW_MATRIX", shadowMatrix)
-
-	--[[
 	FLK3D.SetObjectFlag("boat", "SHADING", true)
-	FLK3D.SetObjectFlag("boat", "SHADE_THRESHOLD", 0.7)
-	FLK3D.SetObjectFlag("boat", "SHADING_SMOOTH", true)
+	FLK3D.SetObjectFlag("boat", "SHADING_SMOOTH", false)
+	FLK3D.SetObjectFlag("boat", "SHADE_THRESHOLD", 0.6)
 	FLK3D.SetObjectFlag("boat", "COL_HIGHLIGHT", PALETTE_3)
 	FLK3D.SetObjectFlag("boat", "COL_SHADE", PALETTE_4)
-	]]--
 
 
 	FLK3D.AddObjectToUniv("boat_window", "boat_window")
@@ -83,9 +77,20 @@ FLK3D.PushUniverse(univMenu)
 	FLK3D.SetObjectFlag("clouds", "VERT_SHADER", function(vpos, vuv)
 		local add = LKHooks.CurTime() * 0.05
 
-		vuv[1] = vuv[1] + add
-		vuv[2] = vuv[2] + add
+		vuv[1] = vuv[1] * .5 + add
+		vuv[2] = vuv[2] * .5 + add
 	end)
+
+
+	--[[
+	FLK3D.AddObjectToUniv("the_sun_object", "cube")
+	FLK3D.SetObjectScl("the_sun_object", Vector(1, 1, 1))
+	FLK3D.SetObjectFlag("the_sun_object", "COL_HIGHLIGHT", PALETTE_13)
+	FLK3D.SetObjectPos("the_sun_object", Vector(0, 5, 0))
+	FLK3D.SetObjectAng("the_sun_object", Angle(0, 0, 0))
+	FLK3D.SetObjectFlag("the_sun_object", "NO_BACKFACE_CULL", true)
+	]]--
+
 
 	--[[
 	FLK3D.AddObjectToUniv("cloud1", "cloud_lq")
@@ -187,12 +192,14 @@ function state.onThink(dt)
 
 	FLK3D.PushUniverse(univMenu)
 		FLK3D.SetObjectAng("boat", angBoat)
-		FLK3D.SetObjectAng("boatShadow", angBoat)
 		FLK3D.SetObjectAng("boat_window", angBoat)
+
+		FlowJam.UpdateSceneShadows()
+		FlowJam.UpdateSceneSun()
 	FLK3D.PopUniverse()
 
 	if not FlowJam.DebugCamThink(dt) then
-		FLK3D.SetCamPos(Vector(2.5, -1.5, 4.5))
+		FLK3D.SetCamPos(Vector(3.5, -1.5, 4))
 		FLK3D.SetCamAng(Angle(-12, -140, 0))
 	end
 
@@ -210,13 +217,13 @@ local function renderMainMenu()
 	FlowJam.APrint("====[GAME TITLE HERE]====", logoX, logoY, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
 	FlowJam.APrint("=========================", logoX, logoY + 1, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
 
-	local colOptionPlay = selectedButton == 0 and PALETTE_13 or COLOR_BLACK
+	local colOptionPlay = selectedButton == 0 and PALETTE_12 or COLOR_BLACK
 	FlowJam.APrint("[Play]", 1, sh * .4, COLOR_WHITE, colOptionPlay, TEXT_ALIGN_LEFT)
 
-	local colOptionCredits = selectedButton == 1 and PALETTE_13 or COLOR_BLACK
+	local colOptionCredits = selectedButton == 1 and PALETTE_12 or COLOR_BLACK
 	FlowJam.APrint("[Credits]", 1, sh * .5, COLOR_WHITE, colOptionCredits, TEXT_ALIGN_LEFT)
 
-	local colOptionExit = selectedButton == 2 and PALETTE_13 or COLOR_BLACK
+	local colOptionExit = selectedButton == 2 and PALETTE_12 or COLOR_BLACK
 	FlowJam.APrint("[Exit]", 1, sh * .6, COLOR_WHITE, colOptionExit, TEXT_ALIGN_LEFT)
 end
 
@@ -245,6 +252,8 @@ function state.onEnter()
 	setPalette()
 	FLK3D.FOV = 60
 	FLK3D.BuildProjectionMatrix(FlowJam.ScrW() / FlowJam.ScrH(), 0.1, 256)
+
+	FlowJam.SetSong("menu1")
 end
 
 function state.onExit()
