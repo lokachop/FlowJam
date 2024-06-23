@@ -13,6 +13,7 @@ function FlowJam.SetupFishingCircle()
 	FLK3D.SetObjectFlag("fishing_circle", "COL_HIGHLIGHT", PALETTE_6)
 	FLK3D.SetObjectFlag("fishing_circle", "COL_SHADE", PALETTE_7)
 	FLK3D.SetObjectFlag("fishing_circle", "SHADING", true)
+	--FLK3D.SetObjectFlag("fishing_circle", "SHADE_DITHER", true)
 
 	FLK3D.SetObjectFlag("fishing_circle", "PLANAR_SHADOW", true)
 

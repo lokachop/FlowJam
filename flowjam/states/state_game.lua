@@ -76,11 +76,20 @@ function state.onThink(dt)
 end
 
 
+
 function state.onRender()
 	FLK3D.PushUniverse(univGame)
 	FLK3D.PushRenderTarget(rtGame)
 		FLK3D.ClearHalfed(PALETTE_14, true)
 		FLK3D.RenderActiveUniverse()
+
+		FLK3D.DrawRect(0, 0, 32, 32, COLOR_BLACK)
+
+		FLK3D.DrawTexturedRect(0, 0, 32, 32, "cloud_tex")
+
+		FLK3D.DrawCircle(FlowJam.ScrW() * .5, FlowJam.ScrH() * .5, 16, 16, 16, PALETTE_13)
+
+
 		FLK3D.RenderRTToScreen()
 	FLK3D.PopRenderTarget()
 	FLK3D.PopUniverse()

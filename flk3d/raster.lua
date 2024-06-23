@@ -477,6 +477,11 @@ function FLK3D.Raster_SetUVsLM(u0, v0, u1, v1, u2, v2)
 	_lmu2, _lmv2 = u2, v2
 end
 
+local _renderHalfDisable = false
+function FLK3D.Raster_SetRenderHalfDisable(bool)
+	_renderHalfDisable = bool
+end
+
 local shiftTable = {
 	[ 0] = 1,
 	[ 1] = 2,
@@ -553,7 +558,7 @@ function FLK3D.RenderTriangleParams()
 			--x, y = math_round(x), math_round(y)
 			x, y = math_floor(x + .5), math_floor(y + .5)
 
-			if renderHalf and ((x + y) + rtFrame) % 2 == 0 then
+			if (renderHalf and (not _renderHalfDisable)) and ((x + y) + rtFrame) % 2 == 0 then
 				goto _contBary
 			end
 

@@ -58,6 +58,7 @@ FLK3D.LoadFile("palette")
 FLK3D.LoadFile("camera")
 FLK3D.LoadFile("raster")
 FLK3D.LoadFile("pipeline")
+FLK3D.LoadFile("renderutils")
 
 FLK3D.LoadFile("render_cc")
 

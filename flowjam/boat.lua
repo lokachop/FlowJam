@@ -36,6 +36,7 @@ function FlowJam.SetupBoat()
 	FLK3D.SetObjectFlag("boat_arrow", "COL_HIGHLIGHT", PALETTE_6)
 	FLK3D.SetObjectFlag("boat_arrow", "COL_SHADE", PALETTE_7)
 	FLK3D.SetObjectFlag("boat_arrow", "SHADING", true)
+	--FLK3D.SetObjectFlag("boat_arrow", "SHADE_DITHER", true)
 
 	FLK3D.SetObjectFlag("boat_arrow", "PLANAR_SHADOW", true)
 

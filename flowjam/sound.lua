@@ -91,7 +91,7 @@ local function loadSong(name, path, sampleRate)
 	print("\n")
 end
 
---loadSong("general1", "sound/general1.dfpwm", 11500)
+--loadSong("general1", "sound/general1.dfpwm", 11250)
 --loadSong("menu1", "sound/songmenu.dfpwm", 8000)
 --loadSong("tuto1", "sound/songtuto.dfpwm", 8000)
 
@@ -136,8 +136,10 @@ function FlowJam.SoundThink(dt)
 		return
 	end
 
-	nextPlay = cTime + (buffSize / 48000)
 
 	local buff = generateBuffer()
-	speaker.playAudio(buff)
+	local played = speaker.playAudio(buff)
+	if played then
+		nextPlay = cTime + (#buff / 48000)
+	end
 end
