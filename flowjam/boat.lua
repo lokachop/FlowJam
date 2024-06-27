@@ -105,7 +105,7 @@ local _velMul = .1
 local _velCap = 2
 
 local _rotSlowMul = 4
-local _rotVelMul = 2
+local _rotVelMul = 128
 local function moveBoat(dt)
 	local fw = getBoatForwardDir() * _velMul
 	local ri = getBoatRightDir() * _velMul
@@ -129,15 +129,12 @@ local function moveBoat(dt)
 	end
 
 	if LKHooks.IsKeyDown(keys.a) then
-		boatAngVel = boatAngVel + _rotVelMul
+		boatAngVel = boatAngVel + _rotVelMul * dt
 	end
 
 	if LKHooks.IsKeyDown(keys.d) then
-		boatAngVel = boatAngVel - _rotVelMul
+		boatAngVel = boatAngVel - _rotVelMul * dt
 	end
-	--print(boatAngVel)
-	--print(boatVel)
-	--print(boatRot)
 
 	boatRot = boatRot + boatAngVel * dt
 	boatRot = boatRot % 360

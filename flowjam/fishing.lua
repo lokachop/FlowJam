@@ -32,3 +32,9 @@ end
 function FlowJam.FishingCircleThink(dt)
 
 end
+
+
+function FlowJam.BeginFishing()
+	
+
+end

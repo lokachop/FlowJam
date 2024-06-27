@@ -113,7 +113,7 @@ end
 
 
 -- https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-function FLK3D.RenderLine(x1, y1, x2, y2, cont)
+function FLK3D.Raster_RenderLine(x1, y1, x2, y2, cont)
 	local rt = FLK3D.GetCurrRT()
 	local rtParams = rt._params
 	local rtW, rtH = rtParams.w, rtParams.h
@@ -131,15 +131,6 @@ function FLK3D.RenderLine(x1, y1, x2, y2, cont)
 		else
 			lineHigh(x1, y1, x2, y2, cont, rtW, rtH, rt)
 		end
-	end
-
-	if love and _LKPXDEBUG then
-		FLK3D.LOVE_DEBUG_BUFF[#FLK3D.LOVE_DEBUG_BUFF + 1] = {
-			type = "line",
-			start = {x1, y1},
-			endpos = {x2, y2},
-			col = cont
-		}
 	end
 end
 
@@ -218,176 +209,6 @@ local texMode = FLK3D.TEXINTERP_MODE
 
 local function lerp(t, a, b)
 	return a * (1-t) + b * t
-end
-function FLK3D.RenderTriangleSimple(x0, y0, x1, y1, x2, y2, c0, c1, c2, v0_w, v1_w, v2_w, u0, v0, u1, v1, u2, v2, tdata)
-	local rt = FLK3D.GetCurrRT()
-	local rtParams = rt._params
-	local rtW, rtH = rtParams.w, rtParams.h
-
-	local dbuff = rt._depth
-
-	--[[
-	x0 = math_floor(x0)
-	y0 = math_floor(y0)
-	x1 = math_floor(x1)
-	y1 = math_floor(y1)
-	x2 = math_floor(x2)
-	y2 = math_floor(y2)
-	]]--
-
-	if FLK3D.WIREFRAME then
-		x0 = math_floor(x0)
-		y0 = math_floor(y0)
-		x1 = math_floor(x1)
-		y1 = math_floor(y1)
-		x2 = math_floor(x2)
-		y2 = math_floor(y2)
-
-		FLK3D.RenderLine(x0, y0, x1, y1, _wfCol)
-		FLK3D.RenderLine(x0, y0, x2, y2, _wfCol)
-		FLK3D.RenderLine(x1, y1, x2, y2, _wfCol)
-
-		return
-	end
-
-
-	local minX = math.min(x0, x1, x2)
-	local minY = math.min(y0, y1, y2)
-	local maxX = math.max(x0, x1, x2)
-	local maxY = math.max(y0, y1, y2)
-
-	minX = math.max(minX, 0)
-	minY = math.max(minY, 0)
-	maxX = math.min(maxX, rtW - 1)
-	maxY = math.min(maxY, rtH - 1)
-
-	local texW, texH = tdata.data[1], tdata.data[2]
-
-
-	local rtFrame = rt._frame or 0
-	for y = minY, maxY do
-		for x = minX, maxX do
-			--x, y = math_round(x), math_round(y)
-			x, y = math_floor(x + .5), math_floor(y + .5)
-
-			if renderHalf and ((x + y) + rtFrame) % 2 == 0 then
-				goto _contBary
-			end
-
-
-			_v0[1] = x1 - x0
-			_v0[2] = y1 - y0
-
-			_v1[1] = x2 - x0
-			_v1[2] = y2 - y0
-
-			_v2[1] = x + .5 - x0
-			_v2[2] = y + .5 - y0
-
-			_d00 = _v0[1] * _v0[1] + _v0[2] * _v0[2]
-			_d01 = _v0[1] * _v1[1] + _v0[2] * _v1[2]
-			_d11 = _v1[1] * _v1[1] + _v1[2] * _v1[2]
-			_d20 = _v2[1] * _v0[1] + _v2[2] * _v0[2]
-			_d21 = _v2[1] * _v1[1] + _v2[2] * _v1[2]
-
-			local denom = _d00 * _d11 - _d01 * _d01
-			local w1 = (_d11 * _d20 - _d01 * _d21) / denom
-			local w2 = (_d00 * _d21 - _d01 * _d20) / denom
-			local w0 = 1 - w1 - w2
-
-
-			--local w1, w2, w0 = baryCentric(x + .5, y + .5, x0, y0, x1, y1, x2, y2)
-
-			if w0 < 0 or w1 < 0 or w2 < 0 then
-				goto _contBary
-			end
-
-			local wCalc = -((w0 * v0_w) + (w1 * v1_w) + (w2 * v2_w))
-			local dCalc = (1 / wCalc)
-
-			local prev = dbuff[x + (y * rtW)]
-			if (dCalc < prev) then
-				local negW = -wCalc
-				local uCalc = ((w0 * u0) + (w1 * u1) + (w2 * u2))
-				local vCalc = ((w0 * v0) + (w1 * v1) + (w2 * v2))
-
-				if perspTex then
-					uCalc = uCalc / negW
-					vCalc = vCalc / negW
-				end
-
-				local tCol = _table
-				if texMode == _TEX_NEAREST then
-					local tu = math_floor(texW * uCalc) % texW
-					local tv = math_floor(texH * vCalc) % texH
-
-					tCol = tdata[tu + (tv * texW)]
-				elseif texMode == _TEX_BAYER then
-					local bayerIdx = (x % 4) + ((y % 4) * 4) + 1
-
-					local tu = math_floor((texW * uCalc) + bayer4[bayerIdx]) % texW
-					local tv = math_floor((texH * vCalc) + bayer4[bayerIdx]) % texH
-
-					tCol = tdata[tu + (tv * texW)]
-				elseif texMode == _TEX_LINEAR then
-					local du = (texW * uCalc) % 1
-					local dv = (texH * vCalc) % 1
-
-
-					local tu = math_floor(texW * uCalc) % texW
-					local tv = math_floor(texH * vCalc) % texH
-
-					local tu_a = math_floor((texW * uCalc) + 1) % texW
-					local tv_a = math_floor((texH * vCalc) + 1) % texH
-
-
-					local sp_tl = tdata[tu + (tv * texW)]
-					local sp_tr = tdata[tu_a + (tv * texW)]
-
-					local sp_bl = tdata[tu + (tv_a * texW)]
-					local sp_br = tdata[tu_a + (tv_a * texW)]
-
-
-					local _lerpH_T = {lerp(du, sp_tl[1], sp_tr[1]), lerp(du, sp_tl[2], sp_tr[2]), lerp(du, sp_tl[3], sp_tr[3])}
-					local _lerpH_B = {lerp(du, sp_bl[1], sp_br[1]), lerp(du, sp_bl[2], sp_br[2]), lerp(du, sp_bl[3], sp_br[3])}
-
-
-					tCol = {lerp(dv, _lerpH_T[1], _lerpH_B[1]), lerp(dv, _lerpH_T[2], _lerpH_B[2]), lerp(dv, _lerpH_T[3], _lerpH_B[3])}
-
-					--local _t_data = tdata[tu + (tv * texW)]
-					--tCol = {_t_data[1] + (du * 64), _t_data[2] + (dv * 64), _t_data[3]}
-				end
-
-				local rCalc = ((w0 * c0[1]) + (w1 * c1[1]) + (w2 * c2[1]))
-				local gCalc = ((w0 * c0[2]) + (w1 * c1[2]) + (w2 * c2[2]))
-				local bCalc = ((w0 * c0[3]) + (w1 * c1[3]) + (w2 * c2[3]))
-
-				if perspCol then
-					rCalc = rCalc / negW
-					gCalc = gCalc / negW
-					bCalc = bCalc / negW
-				end
-
-				rt[x + (y * rtW)] = {tCol[1] * rCalc, tCol[2] * gCalc, tCol[3] * bCalc}
-				dbuff[x + (y * rtW)] = dCalc
-
-				-- overdraw test
-				--local contPrev = rt[x + (y * rtW)]
-				--local _add = 16
-				--rt[x + (y * rtW)] = {contPrev[1] + _add, contPrev[2] + _add, contPrev[3] + _add}
-
-				-- zbuffer see
-				-- local dCol = dCalc * 16
-				-- rt[x + (y * rtW)] = {dCol, dCol, dCol}
-
-				if FLK3D.Debug then
-					FLK3D.DebugFragments = FLK3D.DebugFragments + 1
-				end
-			end
-
-			::_contBary::
-		end
-	end
 end
 
 local _px0, _py0 = 0, 0
@@ -527,10 +348,10 @@ function FLK3D.RenderTriangleParams()
 		x2 = math_floor(x2)
 		y2 = math_floor(y2)
 
-		FLK3D.RenderLine(x0, y0, x1, y1, _wfCol)
-		FLK3D.RenderLine(x0, y0, x2, y2, _wfCol)
+		FLK3D.Raster_RenderLine(x0, y0, x1, y1, _wfCol)
+		FLK3D.Raster_RenderLine(x0, y0, x2, y2, _wfCol)
 
-		FLK3D.RenderLine(x1, y1, x2, y2, _wfCol)
+		FLK3D.Raster_RenderLine(x1, y1, x2, y2, _wfCol)
 
 		return
 	end

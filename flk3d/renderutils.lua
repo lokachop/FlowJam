@@ -138,7 +138,7 @@ end
 function FLK3D.DrawCircle(x, y, sx, sy, itr, col)
     local poly = {}
 
-    for i = 0, (itr) do
+    for i = 0, (itr - 1) do
         local delta = (i / itr) * (math.pi * 2)
 
         poly[#poly + 1] = {
@@ -147,4 +147,9 @@ function FLK3D.DrawCircle(x, y, sx, sy, itr, col)
     }
     end
     FLK3D.DrawPoly(poly, col)
+end
+
+
+function FLK3D.DrawLine(x1, y1, x2, y2, col)
+    FLK3D.Raster_RenderLine(x1, y1, x2, y2, col)
 end

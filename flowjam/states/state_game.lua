@@ -26,7 +26,7 @@ end
 
 FLK3D.PushUniverse(univGame)
 	FLK3D.AddObjectToUniv("ocean", "ocean_plane")
-	FLK3D.SetObjectMat("ocean", "debug")
+	FLK3D.SetObjectMat("ocean", "ocean_tex")
 	FLK3D.SetObjectPos("ocean", Vector(0, 0, 0))
 	FLK3D.SetObjectAng("ocean", Angle(0, 0, 0))
 	FLK3D.SetObjectScl("ocean", Vector(64, 1, 64))
@@ -35,8 +35,8 @@ FLK3D.PushUniverse(univGame)
 		local vX = vpos[1]
 		local vY = vpos[3]
 
-		--vuv[1] = vuv[1] + math.sin((add * 2) + (vY * 4)) + add
-		--vuv[2] = vuv[2] + math.cos(add * 0.5 + vX * 2) + add
+		vuv[1] = vuv[1] + math.sin((add * 2) + (vY * 4)) + add
+		vuv[2] = vuv[2] + math.cos(add * 0.5 + vX * 2) + add
 	end)
 
 	FLK3D.AddObjectToUniv("clouds", "cloud_plane")
@@ -83,11 +83,11 @@ function state.onRender()
 		FLK3D.ClearHalfed(PALETTE_14, true)
 		FLK3D.RenderActiveUniverse()
 
-		FLK3D.DrawRect(0, 0, 32, 32, COLOR_BLACK)
+		--FLK3D.DrawRect(0, 0, 32, 32, COLOR_BLACK)
 
-		FLK3D.DrawTexturedRect(0, 0, 32, 32, "cloud_tex")
+		--FLK3D.DrawTexturedRect(0, 0, 32, 32, "cloud_tex")
 
-		FLK3D.DrawCircle(FlowJam.ScrW() * .5, FlowJam.ScrH() * .5, 16, 16, 16, PALETTE_13)
+		--FLK3D.DrawCircle(FlowJam.ScrW() * .5, FlowJam.ScrH() * .5, 16, 16, 16, PALETTE_13)
 
 
 		FLK3D.RenderRTToScreen()
