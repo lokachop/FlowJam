@@ -121,6 +121,8 @@ if tW > 51 or tH > 19 then
 	end
 end
 
+math.randomseed(os.time())
+
 
 
 require("flk3d.flk3d")

@@ -7,8 +7,8 @@ local function setPalette()
 	FLK3D.ReplacePaletteColour(PALETTE_1, 64 * .75, 96 * .75, 200 * .75) -- water1
 	FLK3D.ReplacePaletteColour(PALETTE_2, 128 * .75, 160 * .75, 240 * .75) -- water2
 
-	FLK3D.ReplacePaletteColour(PALETTE_3, 84, 88, 94) -- rod1
-	FLK3D.ReplacePaletteColour(PALETTE_4, 143, 86, 59) -- rod2
+	FLK3D.ReplacePaletteColour(PALETTE_3, 106, 190, 48) -- FISH1
+	FLK3D.ReplacePaletteColour(PALETTE_4, 25, 44, 12) -- FISH2
 
 
 	--[[
@@ -38,8 +38,25 @@ local rtFishing = FLK3D.NewRenderTarget("RTFishing", FlowJam.ScrW(), FlowJam.Scr
 
 FLK3D.PushUniverse(univFishing)
 
-	FLK3D.AddObjectToUniv("squidtest", "squid")
-	FLK3D.SetObjectMat("squidtest", "squid_tex")
+	FLK3D.AddObjectToUniv("flowplane", "ocean_plane")
+	FLK3D.SetObjectMat("flowplane", "background_flow")
+	FLK3D.SetObjectPos("flowplane", Vector(-1, 0, 0))
+	FLK3D.SetObjectAng("flowplane", Angle(0, 0, 90))
+	FLK3D.SetObjectScl("flowplane", Vector(14, 1, 14))
+	FLK3D.SetObjectFlag("flowplane", "VERT_SHADER", function(vpos, vuv)
+		local add = LKHooks.CurTime() * 0.01
+		local vX = vpos[1]
+		local vY = vpos[1]
+
+		local tmp1 = vuv[1]
+		vuv[1] = vuv[2] * .5 + (math.sin((vY + add) * 32) * 0.5)
+		vuv[2] = tmp1 * .5
+	end)
+
+
+
+	FLK3D.AddObjectToUniv("squidtest", "fish_long")
+	FLK3D.SetObjectMat("squidtest", "fish_ball_tex")
 	FLK3D.SetObjectPos("squidtest", Vector(0, 0, 0))
 	FLK3D.SetObjectAng("squidtest", Angle(0, 0, 0))
 	FLK3D.SetObjectScl("squidtest", Vector(1, 1, 1))

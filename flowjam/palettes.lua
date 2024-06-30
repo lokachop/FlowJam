@@ -19,6 +19,25 @@ PALETTE_12 = FLK3D.DeclareNewPaletteColour(64, 64, 0)
 PALETTE_13 = FLK3D.DeclareNewPaletteColour(0, 0, 64)
 PALETTE_14 = FLK3D.DeclareNewPaletteColour(64, 0, 64)
 
+function FlowJam.ResetPalette()
+    FLK3D.ReplacePaletteColour(COLOR_WHITE, 255, 255, 255)
+    FLK3D.ReplacePaletteColour(COLOR_BLACK, 24, 24, 24)
+
+    FLK3D.ReplacePaletteColour(PALETTE_1 , 64, 96, 200)
+    FLK3D.ReplacePaletteColour(PALETTE_2 , 128, 160, 240)
+    FLK3D.ReplacePaletteColour(PALETTE_3 , 255, 0, 0)
+    FLK3D.ReplacePaletteColour(PALETTE_4 , 0, 255, 0)
+    FLK3D.ReplacePaletteColour(PALETTE_5 , 255, 255, 0)
+    FLK3D.ReplacePaletteColour(PALETTE_6 , 0, 0, 255)
+    FLK3D.ReplacePaletteColour(PALETTE_7 , 255, 0, 255)
+    FLK3D.ReplacePaletteColour(PALETTE_8 , 0, 255, 255)
+    FLK3D.ReplacePaletteColour(PALETTE_9 , 255, 255, 255)
+    FLK3D.ReplacePaletteColour(PALETTE_10, 64, 0, 0)
+    FLK3D.ReplacePaletteColour(PALETTE_11, 0, 64, 0)
+    FLK3D.ReplacePaletteColour(PALETTE_12, 64, 64, 0)
+    FLK3D.ReplacePaletteColour(PALETTE_13, 0, 0, 64)
+    FLK3D.ReplacePaletteColour(PALETTE_14, 64, 0, 64)
+end
 
 
 local function setPaletteFromTable(tbl)

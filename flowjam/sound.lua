@@ -96,6 +96,8 @@ end
 --loadSong("tuto1", "sound/songtuto.dfpwm", 8000)
 
 
+
+local nextPlay = 0
 local activeSong = "none"
 local currBlock = 0
 
@@ -111,6 +113,10 @@ function FlowJam.SetSong(name)
 	currSongBlockCount = data.blockCount
 	currBlock = 0
 	activeSong = name
+	if speaker then
+		speaker.stop()
+	end
+	nextPlay = 0
 end
 
 
@@ -124,7 +130,6 @@ local function generateBuffer()
 	return vals
 end
 
-local nextPlay = 0
 function FlowJam.SoundThink(dt)
 	if activeSong == "none" then
 		return

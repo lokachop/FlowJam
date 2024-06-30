@@ -150,7 +150,7 @@ local function buttonPressThink()
 	if selectedButton == 0 then -- Play
 		FlowJam.SetState(STATE_GAME)
 	elseif selectedButton == 1 then -- Credits
-
+		FlowJam.SetState(STATE_CREDITS)
 	else -- Quit
 		FLK3D.ResetPalette()
 		LKHooks.ExitProgram()

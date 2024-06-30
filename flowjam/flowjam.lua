@@ -26,5 +26,6 @@ FlowJam.LoadFile("loaders.load_textures")
 
 FlowJam.LoadFile("state_handler")
     FlowJam.LoadFile("states.state_menu")
+    FlowJam.LoadFile("states.state_credits")
     FlowJam.LoadFile("states.state_game")
     FlowJam.LoadFile("states.state_fishing")

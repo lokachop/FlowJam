@@ -17,3 +17,6 @@ FLK3D.LoadModelOBJ("boat_window", "models/boat/boat_window.obj")
 
 
 FLK3D.LoadModelOBJ("squid", "models/fish/squid.obj")
+FLK3D.LoadModelOBJ("fish_ball", "models/fish/fish_ball.obj")
+FLK3D.LoadModelOBJ("fish_simple", "models/fish/fish_simple.obj")
+FLK3D.LoadModelOBJ("fish_long", "models/fish/fish_long.obj")
