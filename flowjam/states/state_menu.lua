@@ -160,7 +160,7 @@ local function buttonPressThink()
 		local sw, sh = FlowJam.GetTermDimensions()
 
 
-		FlowJam.APrint("--==[GAME TITLE]==--", sw * .5, 1, colors.white, colors.black, TEXT_ALIGN_CENTER)
+		FlowJam.APrint("--==Aquatic Tide==--", sw * .5, 1, colors.white, colors.black, TEXT_ALIGN_CENTER)
 
 		local textNames = "A game by Lokachop & Lefton"
 		local tWNames = #textNames
@@ -214,7 +214,7 @@ local function renderMainMenu()
 
 	local logoX, logoY = 1, sh * .2
 	FlowJam.APrint("=========================", logoX, logoY - 1, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
-	FlowJam.APrint("====[GAME TITLE HERE]====", logoX, logoY, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
+	FlowJam.APrint("======Aquatic Tide=======", logoX, logoY, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
 	FlowJam.APrint("=========================", logoX, logoY + 1, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_LEFT)
 
 	local colOptionPlay = selectedButton == 0 and PALETTE_12 or COLOR_BLACK

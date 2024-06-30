@@ -31,7 +31,7 @@ FLK3D.PushUniverse(univGame)
 	FLK3D.SetObjectAng("ocean", Angle(0, 0, 0))
 	FLK3D.SetObjectScl("ocean", Vector(64, 1, 64))
 	FLK3D.SetObjectFlag("ocean", "VERT_SHADER", function(vpos, vuv)
-		local add = LKHooks.CurTime() * 0.05
+		local add = LKHooks.CurTime() * 0.005
 		local vX = vpos[1]
 		local vY = vpos[3]
 
@@ -68,6 +68,8 @@ function state.onThink(dt)
 
 		FlowJam.UpdateSceneShadows()
 		FlowJam.UpdateSceneSun()
+		FlowJam.UpdateSceneFishingCircle()
+		FlowJam.FishingCircleThink(dt)
 	FLK3D.PopUniverse()
 
 	if not FlowJam.DebugCamThink(dt) then
@@ -102,6 +104,7 @@ function state.onEnter()
 
 	FlowJam.SetOrbCamOrigin(Vector(0, -1, 0))
 	FlowJam.SetSong("general1")
+	FlowJam.SpawnFishingCircle()
 end
 
 function state.onExit()

@@ -101,7 +101,7 @@ end
 
 
 local _slowMul = 1.25
-local _velMul = .1
+local _velMul = .01
 local _velCap = 2
 
 local _rotSlowMul = 4
@@ -117,8 +117,11 @@ local function moveBoat(dt)
 
 
 	local slowedX, slowedY = moveTowards2D(boatVel[1], boatVel[3], 0, 0, dt * _slowMul * velLen)
-	boatVel[1] = math.min(math.max(slowedX, -_velCap), _velCap)
-	boatVel[3] = math.min(math.max(slowedY, -_velCap), _velCap)
+	boatVel[1] = slowedX
+	boatVel[3] = slowedY
+
+	--boatVel[1] = math.min(math.max(slowedX, -_velCap), _velCap)
+	--boatVel[3] = math.min(math.max(slowedY, -_velCap), _velCap)
 
 	if LKHooks.IsKeyDown(keys.w) then
 		boatVel = boatVel + fw
@@ -168,6 +171,20 @@ local function updateBoat(dt)
 	FlowJam.SetOrbCamOrigin(camOriginPos)
 end
 
+
+function FlowJam.GetBoatPos()
+	return boatPos
+end
+
+function FlowJam.GetVisBoatPos()
+	return -boatPos
+end
+
+function FlowJam.GetBoatVel()
+	return boatVel
+end
+
+
 local function updateArrow(dt)
 	local arrowPosFix = boatPos:Copy()
 	arrowPosFix = -arrowPosFix
@@ -176,11 +193,13 @@ local function updateArrow(dt)
 	FLK3D.SetObjectPos("boat_arrow", arrowPosFix)
 	FLK3D.SetObjectPos("boat_arrow_outline", arrowPosFix)
 
-	local circlePos = FlowJam.GetFishingCirclePos()
-	local boatPosCalc = boatPos:Copy()
+	local circlePos = FlowJam.GetFishingCirclePos():Copy()
+	circlePos[1] = -circlePos[1]
+
+	local boatPosCalc = -boatPos:Copy()
 	boatPosCalc[3] = -boatPosCalc[3]
 
-	local diff = circlePos - boatPosCalc
+	local diff = boatPosCalc - circlePos
 	diff:Normalize()
 
 

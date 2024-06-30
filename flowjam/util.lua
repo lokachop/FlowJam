@@ -61,3 +61,8 @@ function FlowJam.GetShadowMatrix(planeOffset, planeNorm, lightDir)
         0                         , 0                         , 0                         , 1.0
     )
 end
+
+
+function FlowJam.PointInCircle(pos, circlePos, circleRad)
+    return pos:Distance(circlePos) < circleRad
+end

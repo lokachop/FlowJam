@@ -31,3 +31,22 @@ LKTEX.LoadPPM("debug", "textures/tex_debug.ppm", {
 	[LKTEX.ColourHash(255, 0, 0)] = PALETTE_8,
 	[LKTEX.ColourHash(0, 0, 0)] = PALETTE_9,
 })
+
+
+
+
+LKTEX.LoadPPM("squid_tex", "textures/tex_squid_dither.ppm", {
+	[LKTEX.ColourHash(0, 0, 0)] = PALETTE_7,
+	[LKTEX.ColourHash(255, 255, 255)] = PALETTE_6, -- squid1
+	[LKTEX.ColourHash(172, 50, 50)] = PALETTE_5, -- squid2
+	[LKTEX.ColourHash(155, 173, 183)] = COLOR_BLACK, -- squid3
+})
+
+
+LKTEX.LoadPPM("rod_tex", "textures/tex_fishingrod.ppm", {
+	[LKTEX.ColourHash(172, 50, 50)] = -1, -- transparent
+
+	[LKTEX.ColourHash(143, 86, 59)] = PALETTE_4, -- rod1
+	[LKTEX.ColourHash(105, 106, 106)] = PALETTE_3, -- squid2
+	[LKTEX.ColourHash(102, 57, 49)] = PALETTE_11, -- squid3
+})
