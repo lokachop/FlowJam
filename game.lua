@@ -1,3 +1,18 @@
+--[[
+	Aquatic Tide
+
+	By Lokachop & Lefton
+
+	This game is an actual disappointment, im sorry
+	It is all completely my (Lokachop) fault due to me not properly focusing to work on the project
+	It is also probably my worst game jam entry ever, practically an FLK3D tech demo
+	ill probs try to actually dedicate time to it on PineJam 2025 but i also hope to redeem myself with Point Of No Return GMod
+	if you can get any enjoyment out of this game, i will be surprised
+]]--
+
+
+
+
 if not term.isColor() then
 	term.clear()
 

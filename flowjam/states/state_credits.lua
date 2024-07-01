@@ -52,8 +52,10 @@ local function writeCredits()
 	ypos = ypos + 1
 
 
-	FlowJam.APrint("Version v0.2PRE, still heavily unfinished", sw * .5, ypos, colors.white, colors.black, TEXT_ALIGN_CENTER)
+	FlowJam.APrint("Version v0.3, still heavily unfinished", sw * .5, ypos, colors.white, colors.black, TEXT_ALIGN_CENTER)
 	ypos = ypos + 1
+
+	
 
 	FlowJam.APrint("Press the W key to return to menu", sw * .5, sh - 2, colors.white, colors.black, TEXT_ALIGN_CENTER)
 end

@@ -91,9 +91,9 @@ local function loadSong(name, path, sampleRate)
 	print("\n")
 end
 
---loadSong("general1", "sound/general1.dfpwm", 11250)
---loadSong("menu1", "sound/songmenu.dfpwm", 8000)
---loadSong("tuto1", "sound/songtuto.dfpwm", 8000)
+loadSong("general1", "sound/general1.dfpwm", 11250)
+loadSong("menu1", "sound/songmenu.dfpwm", 8000)
+loadSong("tuto1", "sound/songtuto.dfpwm", 8000)
 
 
 
@@ -104,6 +104,11 @@ local currBlock = 0
 local currSongBlocks = {}
 local currSongBlockCount = 0
 function FlowJam.SetSong(name)
+	if activeSong == name then
+		return
+	end
+
+
 	local data = songRegistry[name]
 	if not data then
 		return

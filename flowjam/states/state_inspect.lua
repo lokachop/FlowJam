@@ -47,6 +47,12 @@ FLK3D.PopUniverse()
 
 
 function state.onThink(dt)
+	if LKHooks.IsKeyDown(keys.w) then
+		FlowJam.SetState(STATE_GAME)
+	end
+
+
+
 	if not FlowJam.DebugCamThink(dt) then
 		FLK3D.SetCamPos(Vector(-12, .1, .1))
 		FLK3D.SetCamAng(Angle(0, 90, 0))
@@ -67,6 +73,9 @@ local function renderFishInfo()
 
 		FlowJam.APrint(descVal, FlowJam.TermW() * .5, FlowJam.TermH() - descCount + i - 2, COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_CENTER)
 	end
+
+
+	FlowJam.APrint("Press W to return to ship.", FlowJam.TermW() * .5, FlowJam.TermH(), COLOR_WHITE, COLOR_BLACK, TEXT_ALIGN_CENTER)
 end
 
 

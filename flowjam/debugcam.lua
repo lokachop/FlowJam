@@ -70,6 +70,9 @@ end
 local dCamEnabled = false
 local keyFlag = false
 function FlowJam.DebugCamThink(dt)
+	return false
+
+	--[[
 	local keyDown = LKHooks.IsKeyDown(keys.p)
 
 	if keyDown and not keyFlag then
@@ -85,4 +88,5 @@ function FlowJam.DebugCamThink(dt)
 		debugCamDo(dt)
 		return true
 	end
+	]]--
 end

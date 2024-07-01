@@ -148,6 +148,24 @@ end
 
 
 local function updateBoat(dt)
+	if boatPos[1] > 64 then
+		boatPos[1] = 64
+	end
+	if boatPos[1] < -64 then
+		boatPos[1] = -64
+	end
+
+
+	if boatPos[3] > 64 then
+		boatPos[3] = 64
+	end
+	if boatPos[3] < -64 then
+		boatPos[3] = -64
+	end
+
+
+
+
 	local wiggleInten = (boatVel:Length() * 0.25) + .25
 	wiggleInten = math.min(wiggleInten, 2)
 

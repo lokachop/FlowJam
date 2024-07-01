@@ -48,8 +48,8 @@ function FlowJam.SpawnFishingCircle()
 	end
 
 
-	local posX = (math.random() - .5) * 1--128
-	local posY = (math.random() - .5) * 1--128
+	local posX = (math.random() - .5) * 128
+	local posY = (math.random() - .5) * 128
 
 	circlePos = Vector(posX, 0, posY)
 
@@ -171,7 +171,7 @@ function FlowJam.GetFishTarget()
 end
 
 function FlowJam.GetFishTargetTurnCount()
-	return 2--math.floor(fishTarget.resistance / 10)
+	return math.floor(fishTarget.resistance / 10)
 end
 
 function FlowJam.GetFishTargetCircleSize()
