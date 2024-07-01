@@ -101,7 +101,7 @@ end
 
 
 local _slowMul = 1.25
-local _velMul = .01
+local _velMul = 4.25
 local _velCap = 2
 
 local _rotSlowMul = 4
@@ -124,11 +124,11 @@ local function moveBoat(dt)
 	--boatVel[3] = math.min(math.max(slowedY, -_velCap), _velCap)
 
 	if LKHooks.IsKeyDown(keys.w) then
-		boatVel = boatVel + fw
+		boatVel = boatVel + (fw * dt)
 	end
 
 	if LKHooks.IsKeyDown(keys.s) then
-		boatVel = boatVel - fw
+		boatVel = boatVel - (fw * dt)
 	end
 
 	if LKHooks.IsKeyDown(keys.a) then
