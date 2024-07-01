@@ -20,6 +20,8 @@ FlowJam.LoadFile("sound")
 FlowJam.LoadFile("orbcam")
 FlowJam.LoadFile("boat")
 FlowJam.LoadFile("fishing")
+FlowJam.LoadFile("fishes")
+
 
 FlowJam.LoadFile("loaders.load_models")
 FlowJam.LoadFile("loaders.load_textures")
@@ -29,3 +31,4 @@ FlowJam.LoadFile("state_handler")
     FlowJam.LoadFile("states.state_credits")
     FlowJam.LoadFile("states.state_game")
     FlowJam.LoadFile("states.state_fishing")
+    FlowJam.LoadFile("states.state_inspect")

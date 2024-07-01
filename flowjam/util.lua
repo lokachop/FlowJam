@@ -23,6 +23,15 @@ function FlowJam.GetTermDimensions()
     return tw, th
 end
 
+
+function FlowJam.TermW()
+    return tw
+end
+
+function FlowJam.TermH()
+    return th
+end
+
 TEXT_ALIGN_LEFT = 0
 TEXT_ALIGN_CENTER = 1
 TEXT_ALIGN_RIGHT = 2

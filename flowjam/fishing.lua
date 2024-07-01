@@ -116,12 +116,23 @@ function FlowJam.GetFishingActionRot()
 	return math.deg(atan2val or 0) + 90
 end
 
+local circSize = 24
 local turnCount = 0
 local prevRot = 0
 function FlowJam.UpdateFishingActionMouse()
 	local prX, prY = rmX, rmY
 
 	rmX, rmY = pixelMousePos()
+
+	local cX, cY = FlowJam.GetFishingActionCenter()
+	if Vector(rmX, rmY):Distance(Vector(cX, cY)) > circSize then
+		rmX = prX
+		rmY = prY -- fail
+		return
+	end
+
+
+
 	local rot = FlowJam.GetFishingActionRot()
 
 	local rotMoved = rot + 90
@@ -154,12 +165,33 @@ end
 
 
 
-local fishTarget = "none"
-function FlowJam.BeginFishing()
-	FlowJam.SetState(STATE_FISHING)
+local fishTarget = nil
+function FlowJam.GetFishTarget()
+	return fishTarget
+end
 
+function FlowJam.GetFishTargetTurnCount()
+	return 2--math.floor(fishTarget.resistance / 10)
+end
+
+function FlowJam.GetFishTargetCircleSize()
+	return math.max(math.floor((20 - (fishTarget.resistance / 20)) * 2), 16)
+end
+
+function FlowJam.GetFishTargetAwareness()
+	return (140 - fishTarget.awareness) / 140
+end
+
+
+function FlowJam.BeginFishing()
 	rmX, rmY = FlowJam.GetFishingActionCenter()
 
 	prevRot = 0
 	turnCount = 0
+
+	fishTarget = FlowJam.GetRandomFish()
+	circSize = FlowJam.GetFishTargetCircleSize()
+
+
+	FlowJam.SetState(STATE_FISHING)
 end

@@ -6,6 +6,7 @@ FLK3D.LoadModelOBJ("sun", "models/sun.obj")
 FLK3D.LoadModelOBJ("arrow", "models/arrow.obj")
 FLK3D.LoadModelOBJ("arrow_outline", "models/arrow_outline.obj")
 FLK3D.LoadModelOBJ("circle", "models/circle.obj")
+FLK3D.LoadModelOBJ("hook", "models/hook.obj")
 
 
 FLK3D.LoadModelOBJ("cloud", "models/cloud/cloud.obj")

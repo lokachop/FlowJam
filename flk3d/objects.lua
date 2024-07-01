@@ -78,3 +78,9 @@ function FLK3D.SetObjectFlag(name, flag, value)
 
 	univ["objects"][name][flag] = value
 end
+
+function FLK3D.SetObjectModel(name, mdl)
+	local univ = FLK3D.GetCurrUniverse()
+
+	univ["objects"][name].mdl = mdl or "cube"
+end
