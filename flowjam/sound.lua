@@ -46,10 +46,17 @@ local function loadSong(name, path, sampleRate)
 		term.setCursorPos(1, tH - 2)
 		term.write("DecodeBlock")
 		local dec = decoder(line)
+
+		local decSz = #dec
+		local sleepWaits = math.floor(decSz / 128)
 		for i = 1, #dec do
 			local deltaProg = (i / #dec)
 			term.setCursorPos(2, tH - 1)
 			term.write(string.rep(":", deltaProg * 32))
+
+			if (i % sleepWaits) == 0 then
+				sleep(0.1)
+			end
 
 
 			for j = repAccum, repAccum + repTimes do
@@ -69,10 +76,17 @@ local function loadSong(name, path, sampleRate)
 	term.setCursorPos(2, tH - 1)
 	term.write(string.rep(" ", 32))
 	local blocks = {}
-	for i = 1, #listFull, buffSize do
-		local deltaProg = i / #listFull
+
+	local listCount = #listFull
+	local listWait = math.floor(listCount / 128)
+	for i = 1, listCount, buffSize do
+		local deltaProg = i / listCount
 		term.setCursorPos(2, tH - 1)
 		term.write(string.rep(":", deltaProg * 32))
+
+		if (i % listWait) == 0 then
+			sleep(0.1)
+		end
 
 		local newBlock = {}
 
